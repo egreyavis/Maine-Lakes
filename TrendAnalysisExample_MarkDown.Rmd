@@ -1,0 +1,37 @@
+---
+title: "TrendAnalysisExample MarkDown format"
+author: "Erin Grey"
+date: "2024-03-28"
+output: html_document
+---
+
+## Always keep this chunk up top. Click the green button to run it.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Housekeeping - load packages and read in data
+```{r packages}
+library(tidyverse)
+library(ggplot2)
+library(png)
+library(grid)
+library(Kendall)
+library(ggimage)
+library(cowplot)
+# If you get an error here, then go back and install any packages that you were missing and run this chunk again. It should work now.
+```
+
+```{r data_input}
+sdt <- read.csv("sdtTrend.csv") # std timeseries data
+SDTimage = "SDT2.png"
+summary(sdt) # check that dataset looks good (columns are formated correctly, etc)
+```
+
+## Mann-Kendall Test
+
+```{r mk_test}
+mk_full<-MannKendall(sdt$SD_Mean) # run the test
+mktau_full = round(mk_full$tau[1],3) # define tau parameter
+mk_p_full = round(mk_full$sl[1],3) # define p parameter
+```
