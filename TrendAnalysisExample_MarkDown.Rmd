@@ -7,7 +7,7 @@ output: html_document
 
 ## Always keep this chunk up top. Click the green button to run it.
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Housekeeping - load packages and read in data
@@ -23,7 +23,7 @@ library(cowplot)
 ```
 
 ```{r data_input}
-sdt <- read.csv("sdtTrend.csv") # std timeseries data
+sdt <- read.csv("datasets/sdtTrend.csv") # std timeseries data
 SDTimage = "SDT2.png"
 summary(sdt) # check that dataset looks good (columns are formated correctly, etc)
 ```
