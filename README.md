@@ -1,6 +1,6 @@
 # Maine Lakes Data Hub
 ## Scripts
-Look above for the following scrips to help practice:
+Look above for the following scripts to help practice:
  - Practice_Markdown.rmd
  - TrandAnalysisExample.r
  - TrendAnalysisExample_Markdown.rmd
