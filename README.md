@@ -1,5 +1,9 @@
 # Maine Lakes Data Hub
 ## Scripts
+Look above for the following scrips to help practice:
+ - Practice_Markdown.rmd
+ - TrandAnalysisExample.r
+ - TrendAnalysisExample_Markdown.rmd
 ## Datasets
 LSOM Data at https://www.lakesofmaine.org/lake-documents-and-data.html?m=0004  
 Daymet (https://daymet.ornl.gov/) - Daily Surface Weather and Climatological Summaries from NASA Earth data
