@@ -1,0 +1,83 @@
+---
+title: "ErinAnalysisExample MarkDown format"
+author: "Erin Grey"
+date: "2024-12-13"
+output: html_document
+---
+
+## Always keep this chunk up top. Click the green button to run it.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Housekeeping - load packages and read in data
+```{r packages}
+library(tidyverse)
+library(ggplot2)
+library(png)
+library(grid)
+library(Kendall)
+library(ggimage)
+library(cowplot)
+# If you get an error here, then go back and install any packages that you were missing and run this chunk again. It should work now.
+```
+
+```{r data_input}
+sdt <- read.csv("datasets/sdtTrend.csv") # std timeseries data
+SDTimage = "SDT2.png"
+summary(sdt) # check that dataset looks good (columns are formated correctly, etc)
+```
+
+## Mann-Kendall Analysis
+```{r mk_test}
+mk_full<-MannKendall(sdt$SD_Mean) # run the test
+mktau_full = round(mk_full$tau[1],3) # define tau parameter
+mk_p_full = round(mk_full$sl[1],3) # define p parameter
+mk_p_full<-ifelse(mk_p_full<0.001,"<0.001",mk_p_full) ## This is in case p is very low, will show up as "<0.001" instead of some ugly decimal)
+
+# create trend test result statement: 
+sig_full<- if_else(mktau_full > .5 & mk_p_full< 0.05, "Water clarity is significantly increasing",
+                   if_else(mktau_full < -0.5 & mk_p_full<0.05, "Water clarity is significantly decreasing",
+                           if_else(mktau_full < 0.5 & mktau_full >0 & mk_p_full<0.05, "Water clarity is significantly increasing",
+                                   if_else(mktau_full < 0 & mktau_full >-.5 & mk_p_full<0.05, "Water clarity is significantly decreasing",
+                                           "Water clarity is stable or too variable to detect a trend"))))
+
+```
+
+```{r mk_plot}
+plot_full =
+  ggplot()+
+  geom_point(data=subset(sdt, !is.na(SD_Mean)),aes(x=Year,y=SD_Mean),size=0)+
+  scale_y_reverse(lim=c(8,0))+
+  theme_bw()+
+  theme(panel.background = element_rect(color = "black", size=0.5))+
+  scale_x_continuous(position = "top", limits=c(1970,2023))+
+  labs(title = "Full Data Record")+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5),
+        panel.grid.minor = element_blank())+
+  geom_text(aes( x=1970, y=.35, label=paste0("Trend Test Result (", expression("\u03C4"), " = ",
+            mktau_full,", ", "p = ",mk_p_full,"):")),          
+            color="blue", 
+            size=2.5 , # fontface="italic", 
+            hjust = 0)+
+  geom_text(aes( x=1970, y=1.1, label=sig_full),                  
+            color="blue", 
+            size=3 ,  fontface="bold", 
+            hjust = 0)+
+  ylab("Depth (m)")+
+  xlab("Year")+
+  geom_image(data = sdt, aes(x = Year, y = SD_Mean, image=SDTimage), size=.06)+
+  theme(legend.position = "bottom", 
+        plot.caption = element_text(vjust = -1,lineheight = 3,size = 9,color = "grey30", hjust = 0), 
+        plot.margin=unit(c(1,1,1,1), "cm"))+
+  theme(plot.margin = margin(0.2, 0.3, 0.5, 0.2, "cm"),
+        plot.title = element_text(size=11),
+        axis.title=element_text(size=8,face="bold"))+  #top, right, bottom, left.
+  geom_smooth(data = sdt,aes(Year, SD_Mean),color = "red", se = FALSE)#5), span = .2
+plot_full
+
+## optionally save plot as separate file 
+ggsave("Full_MK.png",plot_full, width = 4, height = 2.5, units = "in")
+
+```
