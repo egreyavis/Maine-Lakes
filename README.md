@@ -2,7 +2,7 @@
 ## Scripts
 Look above for the following scripts to help practice:
  - Practice_Markdown.rmd
- - TrandAnalysisExample.r
+ - TrendAnalysisExample.r
  - TrendAnalysisExample_Markdown.rmd
 ## Datasets
 LSOM Data at https://www.lakesofmaine.org/lake-documents-and-data.html?m=0004  
